@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx_learning_django
+    ports:
+      - "8000:8080"
+    volumes:
+      - ./nginx_compose:/etc/nginx/conf.d
+      - ./data/static:/static
+      - ./data/media:/media
+
+    depends_on:
+      - web
+
+  db:
+    image: postgres:16
+    container_name: postgres_learning_django
+    environment:
+      - POSTGRES_DB=learning_django_db #todo
+      - POSTGRES_USER=learning_django_user
+      - POSTGRES_PASSWORD=learning_django_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U learning_django_user -d learning_django_db -p 5432" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  web:
+    build:
+      context: .
+      dockerfile: ./ecs/Dockerfile
+
+    environment:
+      - DJANGO_ALLOWED_HOSTS=web,localhost,127.0.0.1
+      - DJANGO_CONFIGURATION=Development
+      - DJANGO_MEDIA_ROOT=/media/
+      - DJANGO_SETTINGS_MODULE=learning_django.settings
+      - DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:8000
+      - DATABASE_URL=postgresql://learning_django_user:learning_django_pass@db/learning_django_db
+    command:
+      - bash
+      - -c
+      - |
+        python manage.py migrate
+        python manage.py createsuperuser --username admin --email admin@admin.com --noinput && cat <<-000 | python manage.py shell
+        from django.contrib.auth import get_user_model
+        admin = get_user_model().objects.get(username='admin')
+        admin.set_password('admin')
+        admin.save()
+        print('Superuser password updated successfully.')
+        000
+        python manage.py collectstatic --noinput
+        cp /srv/app/static/* -r /static/
+        gunicorn learning_django.wsgi --timeout 180 --bind 0.0.0.0 --reload
+
+    volumes:
+      - ./data/static:/static
+      - ./data/media:/media
+      - .:/srv/app # Mount the local folder directly, so no need for extra build
+
+    expose:
+      - "8000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
