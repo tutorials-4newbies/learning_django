@@ -102,7 +102,7 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 #    DATABASES = values.DatabaseURLValue("postgresql://learning_django_user:learning_django_pass@127.0.0.1:5432/learning_django_db")
-     DATABASES = {
+    DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / "db.sqlite3",
