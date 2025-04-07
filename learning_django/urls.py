@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth.decorators import login_not_required
 from django.conf.urls.static import static
 from django.conf import settings
@@ -26,6 +26,7 @@ admin.site.site_header = "learning_django admin site"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('blog/', include('blog.urls')),
     path('health_check', views.healthcheck, name='healthcheck'),
     path('api-token-auth/', login_not_required(TokenObtainPairView.as_view()), name='api-token-obtain-pair'),
     path('api-token-refresh/', login_not_required(TokenRefreshView.as_view()), name='api-token-refresh'),

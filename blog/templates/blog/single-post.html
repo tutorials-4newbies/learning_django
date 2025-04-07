@@ -1,0 +1,21 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+    <title>הבלוג שלנו</title>
+</head>
+<body dir="rtl">
+<main>
+    <h1>{{ post.title }} - {{ post.author }}</h1>
+    <div class="post-item">
+        <p>{{ post.content }}</p>
+        <p><i>{{ post.updated_at }}</i></p>
+    </div>
+    <a href="{% url 'blog:index' %}">לרשימת הפוסטים</a>
+</main>
+</body>
+</html>
