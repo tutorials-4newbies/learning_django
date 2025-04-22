@@ -48,7 +48,7 @@ class Base(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
     ]
-    LEARNING_DJANGO_APPS = []
+    LEARNING_DJANGO_APPS = ["blog"]
     INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LEARNING_DJANGO_APPS
 
     MIDDLEWARE = [
