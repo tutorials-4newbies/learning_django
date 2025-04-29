@@ -1,0 +1,33 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  line-height: 1.6;
+}
+
+h1 {
+  text-align: center;
+  color: #4a4a4a;
+}
+
+.post-item {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.post-item h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.post-item p:last-child {
+  color: #888;
+  font-size: 0.85rem;
+}

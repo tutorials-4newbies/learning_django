@@ -18,3 +18,7 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.title} מאת {self.author}"
+    
+    @property
+    def shortened_content(self):
+        return self.content[:30]
