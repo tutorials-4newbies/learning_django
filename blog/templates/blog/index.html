@@ -10,7 +10,7 @@
   <body dir="rtl">
     <h1>הפוסטים שלנו</h1>
     {% for post in posts %}
-    <a href="{% url 'blog:single_post' post.id %}">
+    <a href="">
       <div class="post-item">
         <h2>{{ post.title }}</h2>
         <p>{{ post.shortened_content }}</p>
