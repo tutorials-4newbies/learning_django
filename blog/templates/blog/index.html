@@ -5,12 +5,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'blog/styles.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
     <title>Blog - {{ title }}</title>
   </head>
   <body dir="rtl">
-    <h1>הפוסטים שלנו</h1>
+    <div>
+      <h1>הפוסטים שלנו</h1>
+      <a href="{% url 'blog:add_post' %}"
+        ><button class="add-button"><i class="fas fa-plus"></i></button
+      ></a>
+    </div>
     {% for post in posts %}
-    <a href="">
+    <a href="{% url 'blog:single_post' post.id %}">
       <div class="post-item">
         <h2>{{ post.title }}</h2>
         <p>{{ post.shortened_content }}</p>

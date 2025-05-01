@@ -21,4 +21,4 @@ class Post(models.Model):
     
     @property
     def shortened_content(self):
-        return self.content[:30]
+        return self.content[:30] + "..."
