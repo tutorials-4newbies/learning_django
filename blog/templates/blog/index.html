@@ -18,6 +18,10 @@
         ><button class="add-button"><i class="fas fa-plus"></i></button
       ></a>
     </div>
+    <form method="GET">
+      <input name="search" />
+      <input type="button" value="search" />
+    </form>
     {% for post in posts %}
     <a href="{% url 'blog:single_post' post.id %}">
       <div class="post-item">

@@ -1,10 +1,17 @@
 from datetime import datetime
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from blog.forms import PostForm
 from blog.models import Post, Author
 
 def index(request):
-    posts_queryset = Post.objects.all().order_by("-updated_at") # QuerySet
+    search = request.GET.get('search')
+    posts_queryset = Post.objects.all().order_by("-updated_at")
+    if search:
+        posts_queryset = posts_queryset.filter(
+            Q(title__contains=search) |
+            Q(content__contains=search) | Q(author__first_name__contains=search)
+        )
     context = {
         "posts": posts_queryset[:5],
         "title": "PAGE TITLE"
