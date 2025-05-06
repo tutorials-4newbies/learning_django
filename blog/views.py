@@ -22,9 +22,18 @@ def single_post(request, post_id):
     return render(request=request, template_name=temp_name, context=context)
 
 
+def _get_author_for_user(user):
+    response = Author.objects.get_or_create(first_name=user.username, surname=user.username, email=user.email)
+    return response[0]
+
+
 def add_post(request):
-    if request.method == "POST":      
-        form = PostForm(request.POST)
+    
+    if request.method == "POST":  
+        data = request.POST.copy()
+        data["updated_at"] = datetime.now()
+        data["author"] = _get_author_for_user(request.user)
+        form = PostForm(data)
 
         if form.is_valid():
             form.save()
