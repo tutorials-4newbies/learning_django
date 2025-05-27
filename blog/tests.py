@@ -78,3 +78,17 @@ class OurTestCase(BaseTestCase):
 
         # Assert
         self.assertTemplateUsed(response, "blog/index.html")
+
+
+
+# test_use_correct_template 
+# blog/edit_post.html
+# Arrange - make sure we have an existing post
+# Act - get edit_post view
+# Assert - check template used in respones
+
+
+# test_edit_post_call_actually_edits_post
+# Arrange - make sure we have an existing post
+# Act - send data to view/endpoint
+# Assert - get post from db, check content was updated
