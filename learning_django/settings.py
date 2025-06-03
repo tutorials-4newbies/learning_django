@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import datetime
 from pathlib import Path
+from import_export.formats.base_formats import CSV
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from configurations import Configuration, values
@@ -152,7 +153,7 @@ class Base(Configuration):
     # Internationalization
     # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-    LANGUAGE_CODE = 'en-us'
+    LANGUAGE_CODE = 'he-IL'
 
     TIME_ZONE = 'UTC'
 
@@ -182,6 +183,9 @@ class Base(Configuration):
     # Default primary key field type
     # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
     DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+    
+    # Django Import Export Behavior
+    IMPORT_EXPORT_FORMATS = [CSV]
 
 
 class Development(Base):
