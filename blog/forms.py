@@ -24,7 +24,11 @@ class CustomUserCreationForm(UserCreationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'updated_at', 'author']
+        widgets = {
+            'updated_at': forms.HiddenInput(),
+            'author': forms.HiddenInput(),
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:

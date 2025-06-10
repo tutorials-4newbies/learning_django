@@ -10,8 +10,9 @@ from blog.models import Post, Comment
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def index(request):
     search = request.GET.get('search')
     posts_queryset = Post.objects.all().order_by("-updated_at")
@@ -27,7 +28,7 @@ def index(request):
     temp_name = "blog/index.html"
     return render(request=request, template_name=temp_name, context=context)
 
-
+@login_required
 def single_post(request, post_id):
     post = Post.objects.get(id=post_id)
     temp_name = "blog/single_post.html"
@@ -37,17 +38,13 @@ def single_post(request, post_id):
     return render(request=request, template_name=temp_name, context=context)
 
 
-def _get_author_for_user(user):
-    response = Author.objects.get_or_create(first_name=user.username, surname=user.username, email=user.email)
-    return response[0]
-
-
+@login_required
 def add_post(request):
     
     if request.method == "POST":  
         data = request.POST.copy()
-        data["updated_at"] = datetime.now()
-        data["author"] = _get_author_for_user(request.user)
+        data["updated_at"] = timezone.now()
+        data["author"] = request.user
         form = PostForm(data)
 
         if form.is_valid():
@@ -61,13 +58,13 @@ def add_post(request):
         "form": form
     })
 
-
+@login_required
 def edit_post(request, post_id):
     post = Post.objects.get(id=post_id)
-    
     if request.method == "POST":
         post.title = request.POST.get('title')
-        post.updated_at = datetime.now()
+        post.content = request.POST.get('content')
+        post.updated_at = timezone.now()
         post.save()
         return redirect('blog:single_post', post_id=post.id)
     
@@ -78,6 +75,7 @@ def edit_post(request, post_id):
     return render(request=request, template_name=temp_name, context=context)
 
 
+@login_required
 @csrf_exempt
 def edit_post_title(request, post_id):
     post = Post.objects.get(id=post_id)
@@ -121,7 +119,6 @@ def edit_post_title(request, post_id):
     </div>
 """)
 
-@user_passes_test(lambda u: u.is_anonymous)
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -134,7 +131,6 @@ def register_view(request):
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
-@user_passes_test(lambda u: u.is_anonymous)
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('blog:index')

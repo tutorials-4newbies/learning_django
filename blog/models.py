@@ -7,7 +7,7 @@ class Post(models.Model):
     content = models.TextField(verbose_name="תוכן")
     creation_time = models.DateTimeField(verbose_name=" באמת נוצר בתאריך", null=True)
     updated_at = models.DateTimeField(verbose_name="עדכון אחרון")
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.title} מאת {self.author}"
@@ -22,7 +22,7 @@ class Comment(models.Model):
     creation_time = models.DateTimeField(verbose_name=" באמת נוצר בתאריך", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="עדכון אחרון", auto_now=True)
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.content

@@ -1,7 +1,118 @@
-{% extends "base.html" %}
-{% block title %}{{ post.title }}{% endblock %}
-{% block content %} {{ post.title }} {{ post.content }} {{ post.author }} {{post.updated_at}}
-<a href="{% url 'blog:edit_post' post.id %}">
-  <i class="fas fa-pencil-alt"></i>
-</a>
+{% extends "base.html" %} {% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<style>
+  .post-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-header {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .post-title {
+    color: #333;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+  }
+
+  .post-meta {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .post-meta i {
+    margin-left: 5px;
+    color: #888;
+  }
+
+  .post-content {
+    color: #444;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 30px;
+  }
+
+  .post-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .post-actions a {
+    text-decoration: none;
+  }
+
+  .edit-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .edit-button:hover {
+    background-color: #5a6268;
+    color: white;
+  }
+
+  .back-button {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: 10px;
+  }
+
+  .back-button:hover {
+    background-color: #5a6268;
+    color: white;
+  }
+</style>
+
+<div class="post-container">
+  <div class="post-header">
+    <h1 class="post-title">{{ post.title }}</h1>
+    <div class="post-meta">
+      <p>
+        <i class="fas fa-user"></i>
+        {{ post.author.username }}
+      </p>
+      <p>
+        <i class="fas fa-clock"></i>
+        {{ post.updated_at }}
+      </p>
+    </div>
+  </div>
+
+  <div class="post-content">{{ post.content }}</div>
+
+  <div class="post-actions">
+    <a href="{% url 'blog:index' %}" class="back-button">
+      <i class="fas fa-arrow-right"></i>
+      חזרה לרשימת הפוסטים
+    </a>
+    <a href="{% url 'blog:edit_post' post.id %}" class="edit-button">
+      <i class="fas fa-pencil-alt"></i>
+      עריכת הפוסט
+    </a>
+  </div>
+</div>
 {% endblock %}

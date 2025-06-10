@@ -187,6 +187,7 @@ class Base(Configuration):
     # Django Import Export Behavior
     IMPORT_EXPORT_FORMATS = [CSV]
 
+    LOGIN_URL = 'login/'
 
 class Development(Base):
     CORS_ALLOW_ALL_ORIGINS = True
