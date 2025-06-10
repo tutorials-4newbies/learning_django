@@ -14,9 +14,17 @@ class AuthorAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(ImportExportModelAdmin):
     search_fields = ["title"]
-    list_display = ["title", "content", "id", "comment_count"]
+    list_display = ["title", "content", "content_edit", "id", "comment_count"]
     actions = ["clear_comments"]
+    list_per_page = 15
 
+
+    class Media:
+        js = ['https://unpkg.com/htmx.org@2.0.4']
+
+    def content_edit(self, obj):
+        return obj.content
+    
     def comment_count(self, obj):
         return obj.comment_set.count()
         
@@ -24,6 +32,7 @@ class PostAdmin(ImportExportModelAdmin):
     def clear_comments(self, request, queryset):
         for post in queryset:
             post.comment_set.all().delete()
+
 
 @admin.register(Comment)
 class CommentAdmin(ImportExportModelAdmin):

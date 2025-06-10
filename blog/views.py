@@ -1,6 +1,10 @@
 from datetime import datetime
 from django.db.models import Q
+from django.utils import timezone
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
 from blog.forms import PostForm
 from blog.models import Post, Author
 
@@ -68,3 +72,47 @@ def edit_post(request, post_id):
         "post": post
     }
     return render(request=request, template_name=temp_name, context=context)
+
+
+@csrf_exempt
+def edit_post_title(request, post_id):
+    post = Post.objects.get(id=post_id)
+    post.title = request.POST.get("post-title")
+    post.updated_at = timezone.now()
+    post.save()
+    return HttpResponse(f"""
+    <div class="post-item" id="post-{post.id}" hx-swap-oob="true">
+      <a
+        id="post-title-link-{post.id}"
+        href="{reverse('blog:single_post', args=[post.id])}"
+      >
+        <h2>{ post.title }</h2>
+      </a>
+      <input
+        id="post-title-input-{post.id}"
+        type="text"
+        name="post-title"
+        value="{ post.title }"
+        hidden
+      />
+      <button
+        id="post-title-submit-{post.id}"
+        hx-post="{reverse('blog:edit_post_title', args=[post.id])}"
+        hx-swap="none"
+        hidden
+        hx-include="previous #post-title-input-{post.id}"
+      >
+        SUBMIT
+      </button>
+      <button
+        onclick="document.getElementById('post-title-link-{post.id}').hidden = true;
+        document.getElementById('post-title-input-{post.id}').hidden = false;
+        document.getElementById('post-title-submit-{post.id}').hidden = false;
+        this.hidden = true;"
+      >
+        <i class="fas fa-pencil-alt"></i>
+      </button>
+      <p>{ post.shortened_content }</p>
+      <p>{ post.updated_at }</p>
+    </div>
+""")
