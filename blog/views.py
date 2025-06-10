@@ -2,11 +2,15 @@ from datetime import datetime
 from django.db.models import Q
 from django.utils import timezone
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
-from blog.forms import PostForm
-from blog.models import Post, Author
+from blog.forms import PostForm, CustomUserCreationForm, CommentForm
+from blog.models import Post, Comment
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 
 def index(request):
     search = request.GET.get('search')
@@ -116,3 +120,41 @@ def edit_post_title(request, post_id):
       <p>{ post.updated_at }</p>
     </div>
 """)
+
+@user_passes_test(lambda u: u.is_anonymous)
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Registration successful!')
+            return redirect('blog:index')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+@user_passes_test(lambda u: u.is_anonymous)
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('blog:index')
+
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Login successful!')
+                next_page = request.GET.get('next', 'blog:index')
+                return redirect(next_page)
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    messages.info(request, 'You have been logged out.')
+    return redirect('blog:login')

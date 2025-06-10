@@ -1,13 +1,32 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import Post, Comment
 
-from blog.models import Author, Post
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30, required=True)
 
-    
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name", "email", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data["email"]
+        user.first_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
+        if commit:
+            user.save()
+        return user
+
 class PostForm(forms.ModelForm):
-    author = forms.ModelChoiceField(queryset=Author.objects.all(),widget=forms.HiddenInput())
-    updated_at = forms.DateTimeField(widget=forms.HiddenInput())
-    title = forms.CharField(min_length=10, widget=forms.TextInput(attrs={'class': ['newclas', ''], 'data-name': 'data'}))
     class Meta:
         model = Post
-        fields = ['title', 'content', 
-                  'author', 'updated_at']
+        fields = ['title', 'content']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']

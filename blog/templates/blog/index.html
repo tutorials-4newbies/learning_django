@@ -1,64 +1,46 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'blog/styles.css' %}" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    />
-    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-    <title>Blog - {{ title }}</title>
-  </head>
-  <body dir="rtl">
-    <div>
-      <h1>הפוסטים שלנו</h1>
-      <a href="{% url 'blog:add_post' %}"
-        ><button class="add-button"><i class="fas fa-plus"></i></button
-      ></a>
-    </div>
-    <form method="GET">
-      <input name="search" />
-      <input type="button" value="search" />
-    </form>
+{% extends "base.html" %} {% load static %} {% block title %}Blog - {{ title
+}}{% endblock %} {% block content %}
+<div dir="rtl">
+  <h1>הפוסטים שלנו</h1>
+  <a href="{% url 'blog:add_post' %}">
+    <button class="add-button"><i class="fas fa-plus"></i></button>
+  </a>
+</div>
+<form method="GET">
+  <input name="search" />
+  <input type="button" value="search" />
+</form>
 
-    {% for post in posts %}
-    <div class="post-item" id="post-{{post.id}}">
-      <a
-        id="post-title-link-{{post.id}}"
-        href="{% url 'blog:single_post' post.id %}"
-      >
-        <h2>{{ post.title }}</h2>
-      </a>
-      <input
-        id="post-title-input-{{post.id}}"
-        type="text"
-        name="post-title"
-        value="{{ post.title }}"
-        hidden
-      />
-      <button
-        id="post-title-submit-{{post.id}}"
-        hx-post="{% url 'blog:edit_post_title' post.id %}"
-        hx-swap="none"
-        hidden
-        hx-include="previous #post-title-input-{{post.id}}"
-      >
-        SUBMIT
-      </button>
-      <button
-        onclick="document.getElementById('post-title-link-{{post.id}}').hidden = true;
-        document.getElementById('post-title-input-{{post.id}}').hidden = false;
-        document.getElementById('post-title-submit-{{post.id}}').hidden = false;
-        this.hidden = true;"
-      >
-        <i class="fas fa-pencil-alt"></i>
-      </button>
-      <p>{{ post.shortened_content }}</p>
-      <p>{{ post.updated_at }}</p>
-    </div>
-    {% endfor %}
-  </body>
-</html>
+{% for post in posts %}
+<div class="post-item" id="post-{{post.id}}">
+  <a
+    id="post-title-link-{{post.id}}"
+    href="{% url 'blog:single_post' post.id %}"
+  >
+    <h2>{{ post.title }}</h2>
+  </a>
+  <input
+    id="post-title-input-{{post.id}}"
+    type="text"
+    name="post-title"
+    value="{{ post.title }}"
+    hidden
+  />
+  <button
+    id="post-title-submit-{{post.id}}"
+    hx-post="{% url 'blog:edit_post_title' post.id %}"
+    hx-swap="none"
+    hidden
+    hx-include="previous #post-title-input-{{post.id}}"
+  >
+    SUBMIT
+  </button>
+  <button
+    onclick="document.getElementById('post-title-link-{{post.id}}').hidden = true; document.getElementById('post-title-input-{{post.id}}').hidden = false; document.getElementById('post-title-submit-{{post.id}}').hidden = false; this.hidden = true;"
+  >
+    <i class="fas fa-pencil-alt"></i>
+  </button>
+  <p>{{ post.shortened_content }}</p>
+  <p>{{ post.updated_at }}</p>
+</div>
+{% endfor %} {% endblock %}

@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 from django.test import TestCase
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.urls import reverse
-from blog.models import Author, Post
+from blog.models import Post
 import random
 import string
 
@@ -11,7 +11,7 @@ class BaseTestCase(TestCase):
 
     def given_author_exists(self, first_name="author", surname="surname",
                             email=None, phone=None):
-        author, created = Author.objects.get_or_create(first_name=first_name,
+        author, created = User.objects.get_or_create(first_name=first_name,
                                                 surname=surname,
                                                 email=email, phone=phone)
         return author
@@ -33,10 +33,9 @@ class OurTestCase(BaseTestCase):
 
     def test_index_page_returns_queryset_correctly(self):
         # Arrange
-        User = get_user_model()
-        user = User.objects.create_user("user", password="1234")
+        User = User.objects.create_user("user", password="1234")
 
-        self.client.login(username=user.username, password="1234")
+        self.client.login(username=User.username, password="1234")
 
 
         author = self.given_author_exists()
@@ -67,10 +66,9 @@ class OurTestCase(BaseTestCase):
 
     def test_index_page_uses_correct_template(self):
         # Arrange
-        User = get_user_model()
-        user = User.objects.create_user("user", password="1234")
+        User = User.objects.create_user("user", password="1234")
 
-        self.client.login(username=user.username, password="1234")
+        self.client.login(username=User.username, password="1234")
 
 
         # Act

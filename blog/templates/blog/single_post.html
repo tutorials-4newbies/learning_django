@@ -1,21 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-  </head>
-  <body>
-    {{ post.title }} {{ post.content }} {{ post.author }} {{ post.updated_at}}
-    <a href="{% url 'blog:edit_post' post.id %}">
-      <i class="fas fa-pencil-alt"></i>
-    </a>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %} {{ post.title }} {{ post.content }} {{ post.author }} {{post.updated_at}}
+<a href="{% url 'blog:edit_post' post.id %}">
+  <i class="fas fa-pencil-alt"></i>
+</a>
+{% endblock %}
