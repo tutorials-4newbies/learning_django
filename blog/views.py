@@ -76,8 +76,9 @@ def edit_post(request, post_id):
 
 @csrf_exempt
 def edit_post_title(request, post_id):
+    print(request.POST)
     post = Post.objects.get(id=post_id)
-    post.title = request.POST.get("post-title")
+    post.title = request.POST.get(f"post-title-{post.id}")
     post.updated_at = timezone.now()
     post.save()
     return HttpResponse(f"""
@@ -96,7 +97,7 @@ def edit_post_title(request, post_id):
       <input
         id="post-title-input-{post.id}"
         type="text"
-        name="post-title"
+        name="post-title-{post.id}"
         value="{ post.title }"
         hidden
       />
