@@ -25,6 +25,7 @@
     </form>
 
     {% for post in posts %}
+    <form method="post" action="{% url 'blog:edit_post_title' post.id %}">
     <div class="post-item" id="post-{{post.id}}">
       <a
         id="post-title-link-{{post.id}}"
@@ -39,23 +40,15 @@
         value="{{ post.title }}"
         hidden
       />
-      <button
-        id="post-title-submit-{{post.id}}"
-        hx-post="{% url 'blog:edit_post_title' post.id %}"
-        hx-swap="none"
-        hidden
-        hx-include="previous #post-title-input-{{post.id}}"
-      >
-        SUBMIT
-      </button>
-      <button
+      <input type="submit" id="post-title-submit-{{post.id}}" value="submit" style="display: none;" />
+      <div
         onclick="document.getElementById('post-title-link-{{post.id}}').hidden = true;
         document.getElementById('post-title-input-{{post.id}}').hidden = false;
-        document.getElementById('post-title-submit-{{post.id}}').hidden = false;
+        document.getElementById('post-title-submit-{{post.id}}').style.display = 'block';
         this.hidden = true;"
       >
         <i class="fas fa-pencil-alt"></i>
-      </button>
+      </div>
       <p>{{ post.shortened_content }}</p>
       <p>{{ post.updated_at }}</p>
     </div>

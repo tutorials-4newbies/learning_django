@@ -81,7 +81,7 @@ def edit_post_title(request, post_id):
     post.updated_at = timezone.now()
     post.save()
     return HttpResponse(f"""
-    <div class="post-item" id="post-{post.id}" hx-swap-oob="true">
+    <div class="post-item" id="post-{post.id}">
       <a
         id="post-title-link-{post.id}"
         href="{reverse('blog:single_post', args=[post.id])}"
