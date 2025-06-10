@@ -81,6 +81,11 @@ def edit_post_title(request, post_id):
     post.updated_at = timezone.now()
     post.save()
     return HttpResponse(f"""
+                        <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <form method="post" action="{reverse('blog:edit_post_title', args=[post.id])}">
     <div class="post-item" id="post-{post.id}">
       <a
         id="post-title-link-{post.id}"
@@ -95,24 +100,17 @@ def edit_post_title(request, post_id):
         value="{ post.title }"
         hidden
       />
-      <button
-        id="post-title-submit-{post.id}"
-        hx-post="{reverse('blog:edit_post_title', args=[post.id])}"
-        hx-swap="none"
-        hidden
-        hx-include="previous #post-title-input-{post.id}"
-      >
-        SUBMIT
-      </button>
-      <button
+      <input type="submit" id="post-title-submit-{post.id}" value="submit" style="display: none;" />
+      <div style="min-height: 10px;"
         onclick="document.getElementById('post-title-link-{post.id}').hidden = true;
         document.getElementById('post-title-input-{post.id}').hidden = false;
-        document.getElementById('post-title-submit-{post.id}').hidden = false;
+        document.getElementById('post-title-submit-{post.id}').style.display = 'block';
         this.hidden = true;"
       >
-        <i class="fas fa-pencil-alt"></i>
-      </button>
+        <i style="font-size: 10px; min-height: 10px;" class="fas fa-pencil-alt"></i>
+      </div>
       <p>{ post.shortened_content }</p>
       <p>{ post.updated_at }</p>
     </div>
+    </form>
 """)
